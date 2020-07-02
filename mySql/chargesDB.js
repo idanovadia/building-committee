@@ -7,11 +7,11 @@ String.prototype.replaceAt = function(index, replacement) {
     return this.substr(0, index) + replacement + this.substr(index + replacement.length);
 }
 
-function getCharge(code){
+async function getCharge(chargeID){
     var ans = await new Promise((resolve,reject)=>{
         mysqlConnection.query('SELECT * FROM charges WHERE chargeID='+"'"+chargeID+"'",(err,rows,fields)=>{
             if(!err){
-                var payObj = new payment.payment(rows[0].userName,rows[0].amount,new Date(),rows[0].chargeDate,rows[0].objective);
+                var payObj = new payment.payment(rows[0].chargeID,rows[0].userName,rows[0].amount,new Date(),rows[0].chargeDate,rows[0].objective);
                 resolve(payObj);
             }
             else{
@@ -22,7 +22,7 @@ function getCharge(code){
     return ans; 
 }
 
-function delCharge(code){
+async function delCharge(chargeID){
     var ans = await new Promise((resolve,reject)=>{
         mysqlConnection.query('DELETE FROM charges WHERE chargeID='+"'"+chargeID+"'",(err,rows,fields)=>{
             if(!err){
@@ -38,7 +38,7 @@ function delCharge(code){
 
 module.exports = {
 
-    getUserCharges: (userName) => {
+    getUserCharges: async(userName) => {
         var ans = await new Promise((resolve,reject)=>{
             mysqlConnection.query('SELECT * FROM charges WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
                 if(!err){
@@ -52,9 +52,27 @@ module.exports = {
         return ans; 
     },
 
-    getGroupCharges: (userName) => {
+    getGroupCharges: async(userName) => {
         var ans = await new Promise((resolve,reject)=>{
-            mysqlConnection.query('select * from charges GROUP BY objective where userName in' +
+            var query = 'select sum(amount) as debt, objective from charges where userName in' +
+            '(select userName from users where groupNumber in' + 
+            '(select groupNumber from users where userName = '+"'"+userName+"'"+')) GROUP BY objective';
+            mysqlConnection.query(query,(err,rows,fields)=>{
+                if(!err){
+                    resolve(rows);
+                }
+                else{
+                    reject("Failed");
+                }
+            });
+        });
+        return ans; 
+    },
+
+    /** Only Manager */
+    getGroupChargesInDetails: async(userName) => {
+        var ans = await new Promise((resolve,reject)=>{
+            mysqlConnection.query('select * from charges where userName in' +
              '(select userName from users where groupNumber in' + 
              '(select groupNumber from users where userName = '+"'"+userName+"'"+'))',(err,rows,fields)=>{
                 if(!err){
@@ -68,30 +86,12 @@ module.exports = {
         return ans; 
     },
 
-    /** Only Manager */
-    getGroupChargesInDetails: (userName) => {
-        var ans = await new Promise((resolve,reject)=>{
-            mysqlConnection.query('select * from charges where userName in' +
-             '(select userName from users where groupNumber in' + 
-             '(select groupNumber from users where userName = '+"'"+userName+"'"+' AND role = manager))',(err,rows,fields)=>{
-                if(!err){
-                    resolve(rows);
-                }
-                else{
-                    reject("Failed");
-                }
-            });
-        });
-        return ans; 
-    },
-
-    setNewCharge: (listOfCharge) => {
+    /**work  */
+    setNewCharge: async(listOfCharges) => {
         var newQuery = 'INSERT INTO charges (userName, amount, chargeDate, objective) VALUES';
-        for (const charge in listOfCharge) {
-            newQuery = newQuery + '('+"'"+charge.userName+"'"+','+"'"+charge.amount+"'"+','+"'"+
-            charge.chargeDate+"'"+','+"'"+charge.objective+"'"+'),';
-        }
-        newQuery = newQuery.replaceAt(newQuery.length-1,";");
+        listOfCharges.forEach(charge => newQuery = newQuery + '('+"'"+charge.userName+"'"+','+"'"+charge.amount+"'"+','+"'"+
+            charge.chargeDate+"'"+','+"'"+charge.objective+"'"+'),');
+        newQuery = newQuery.replaceAt(newQuery.length-1," ");
 
         var ans = await new Promise((resolve,reject)=>{
             mysqlConnection.query(newQuery,(err,rows,fields)=>{
@@ -106,9 +106,10 @@ module.exports = {
         return ans;
     },
 
-    pay: (chargeID) => {
-        var raw = getCharge(chargeID);
-        paymentDB.insertPayment(raw);
+    pay: async(chargeID) => {
+        var raw = await getCharge(chargeID);
+        var del = await delCharge(chargeID);
+        await paymentDB.insertPayment(raw);
     },
 
 

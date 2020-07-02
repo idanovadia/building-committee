@@ -1,13 +1,15 @@
+const paymentDB = require("../mySql/paymentDB");
 
 module.exports = {
     payment : class Payment {
 
-        constructor(userName, amount,payDate, chargeDate, objective){
-                this.userName = userName;
-                this.amount = amount;
-                this.payDate = payDate;
-                this.chargeDate = chargeDate;
-                this.objective = objective;
+        constructor(paymentID,userName, amount,payDate, chargeDate, objective){
+            this.paymentID = paymentID;
+            this.userName = userName;
+            this.amount = amount;
+            this.payDate = payDate;
+            this.chargeDate = chargeDate;
+            this.objective = objective;
         }
     },
 } 

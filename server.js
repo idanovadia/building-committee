@@ -6,6 +6,7 @@ const RegistrationRouter = require("./routes/userRoutes/registration");
 const LoginRouter = require("./routes/userRoutes/login");
 const UserDetailsRouter = require("./routes/userRoutes/updateDetails");
 const paymentsRouter = require("./routes/payments/payments");
+const chargesRouter = require("./routes/charges/charges");
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
