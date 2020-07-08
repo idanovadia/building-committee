@@ -7,26 +7,36 @@ const LoginRouter = require("./routes/userRoutes/login");
 const UserDetailsRouter = require("./routes/userRoutes/updateDetails");
 const paymentsRouter = require("./routes/payments/payments");
 const chargesRouter = require("./routes/charges/charges");
+const appointmentsRouter = require("./routes/appointments/appointments");
+const participantsRouter = require("./routes/meeting_participants/meeting_participants");
+// var cors = require('cors')
 
 var app = express();
+// app.use(cors({credentials: true, origin: true}))
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use((req,res,next)=>{
-    res.header("Access-Control-Allow-Origin","*");
-    res.header("Access-Control-Allow-Header","*");
-    if(req.method === 'OPTIONS'){
-        res.header("Access-Control-Allow-Methods","*");
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
         return res.status(200).json({});
     }
     next();
-});
+  });
 
 app.use("/registration", RegistrationRouter);
 app.use("/login", LoginRouter);
 app.use("/myDetails", UserDetailsRouter);
 app.use("/payments", paymentsRouter);
 app.use("/charges", chargesRouter);
+app.use("/appointments", appointmentsRouter);
+app.use("/participants", participantsRouter);
 
 
 
-app.listen(4200);
+app.listen(8080);

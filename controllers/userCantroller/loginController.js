@@ -21,6 +21,7 @@ exports.login = async(req,res,next)=>{
             if(result){
                 const token = jwt.sign({
                     userName:user[0].userName,
+                    role:user[0].role,
                 }, JWT_KEY,{
                     expiresIn: "1h"
                 });

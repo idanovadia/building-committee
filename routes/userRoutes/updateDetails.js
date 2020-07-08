@@ -5,7 +5,7 @@ const checkAuth = require("../../middleware/auth");
 const updateDetailsController = require('../../controllers/userCantroller/updateDetailsController')
 
 
-Router.post("/updatePassword",checkAuth,updateDetailsController.updatePassword);
+Router.post("/updatePassword",checkAuth.authorization,updateDetailsController.updatePassword);
 
 // Router.post("/personal",checkAuth,(req,res,next)=>{
     

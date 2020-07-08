@@ -4,7 +4,7 @@ module.exports = {
 
     getUserPayments: async(username) => {
         var ans = await new Promise((resolve,reject)=>{
-            mysqlConnection.query('SELECT * FROM payments WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
+            mysqlConnection.query('SELECT * FROM payments WHERE userName='+"'"+username+"'",(err,rows,fields)=>{
                 if(!err){
                     resolve(rows);
                 }
@@ -18,9 +18,10 @@ module.exports = {
 
     getGroupPayments: async(userName) => {
         var ans = await new Promise((resolve,reject)=>{
-            mysqlConnection.query('select * from payments GROUP BY objective where userName in' +
-             '(select userName from users where groupNumber in' + 
-             '(select groupNumber from users where userName = '+"'"+userName+"'"+'))',(err,rows,fields)=>{
+            var query = 'select sum(amount) as debt, objective from payments where userName in' +
+            '(select userName from users where groupNumber in' + 
+            '(select groupNumber from users where userName = '+"'"+userName+"'"+')) GROUP BY objective';
+            mysqlConnection.query(query,(err,rows,fields)=>{
                 if(!err){
                     resolve(rows);
                 }
@@ -35,9 +36,10 @@ module.exports = {
     /** Only Manager */
     getGroupPaymentsInDetails: async(userName) => {
         var ans = await new Promise((resolve,reject)=>{
-            mysqlConnection.query('select * from payments where userName in' +
-             '(select userName from users where groupNumber in' + 
-             '(select groupNumber from users where userName = '+"'"+userName+"'"+' AND role = manager))',(err,rows,fields)=>{
+            var query = 'select * from payments where userName in' +
+            '(select userName from users where groupNumber in' + 
+            '(select groupNumber from users where userName = '+"'"+userName+"'"+'))';
+            mysqlConnection.query( query,(err,rows,fields)=>{
                 if(!err){
                     resolve(rows);
                 }

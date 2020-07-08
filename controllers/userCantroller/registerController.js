@@ -8,40 +8,51 @@ const userModel = require('../../models/user');
 /**checked */
 
 async function insertManager(tmpBody,hash){
-    groupNumber = await userDB.getLastGroupNumber() + 1;
-    const user = new userModel.user(
-        tmpBody.username,
-        hash,
-        tmpBody.firstName,
-        tmpBody.lastName,
-        tmpBody.city,
-        tmpBody.street,
-        tmpBody.buildingNumber,
-        tmpBody.apartmentNumber,
-        tmpBody.phone,
-        tmpBody.role,
-        groupNumber
-    );
-    await userDB.insertUser(user);
-    return await userDB.updateManager(user.username,tmpBody.numberOfTenants,user.groupNumber);
+    try{
+        groupNumber = await userDB.getLastGroupNumber() + 1;
+        const user = new userModel.user(
+            tmpBody.userName,
+            hash,
+            tmpBody.firstName,
+            tmpBody.lastName,
+            tmpBody.city,
+            tmpBody.street,
+            tmpBody.buildingNumber,
+            tmpBody.apartmentNumber,
+            tmpBody.phone,
+            tmpBody.role,
+            groupNumber
+        );
+        await userDB.insertUser(user);
+        return await userDB.updateManager(user.username,0,user.groupNumber);
+    }catch(err){
+        throw new Error(err);
+    }
+   
 }
 
 async function insertParticipant(tmpBody,hash){
-    groupNumber = await userDB.getParticipantGroupNumber(tmpBody.code);
-    const user = new userModel.user(
-        tmpBody.username,
-        hash,
-        tmpBody.firstName,
-        tmpBody.lastName,
-        tmpBody.city,
-        tmpBody.street,
-        tmpBody.buildingNumber,
-        tmpBody.apartmentNumber,
-        tmpBody.phone,
-        tmpBody.role,
-        groupNumber
-    );
-    return await userDB.insertUser(user);
+    try{
+        await Validator.validInputVar(tmpBody.code);
+        groupNumber = await userDB.getParticipantGroupNumber(tmpBody.code);
+        const user = new userModel.user(
+            tmpBody.userName,
+            hash,
+            tmpBody.firstName,
+            tmpBody.lastName,
+            tmpBody.city,
+            tmpBody.street,
+            tmpBody.buildingNumber,
+            tmpBody.apartmentNumber,
+            tmpBody.phone,
+            tmpBody.role,
+            groupNumber
+        );
+        return await userDB.insertUser(user);
+    }catch(err){
+        throw new Error(err);
+    }
+    
 }
 
 exports.register = async(req,res,next)=>{
@@ -49,13 +60,22 @@ exports.register = async(req,res,next)=>{
         tmpBody = req.body;
         await Validator.registrationValidator(tmpBody);
         bcrypt.hash(tmpBody.password,10,async(err,hash)=>{
-            var ans = "";
-            if(tmpBody.role === 'manager'){
-                ans = await insertManager(tmpBody,hash);
-            }else if(tmpBody.role === 'participant'){
-                ans = await insertParticipant(tmpBody,hash);
+            try{
+                var ans = "";
+                if(tmpBody.role === 'manager'){
+                    ans = await insertManager(tmpBody,hash);
+                }else if(tmpBody.role === 'participant'){
+                    ans = await insertParticipant(tmpBody,hash);
+                }
+                else{
+                    throw new Error("Not a legal user role");
+                }
+                res.status(200).send(ans);
+            }catch(err){
+                return res.status(500).json({
+                    error: err.message    
+                });
             }
-            res.status(200).send(ans);
         });
     }catch(err){
         return res.status(500).json({

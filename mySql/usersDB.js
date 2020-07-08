@@ -1,5 +1,6 @@
 const mysqlConnection = require("../connection");
 const crypto = require('crypto');
+// const Validator = require("../mySql/Validator");
 
 function genHash(s){
     hash = crypto.getHashes();
@@ -88,7 +89,7 @@ module.exports = {
                         resolve(max);
                 }
                 else{
-                    console.log(err);
+                    reject(err);
                 }
             });
         });
@@ -98,16 +99,30 @@ module.exports = {
     getParticipantGroupNumber: async (code) => {
         var ans = await new Promise((resolve,reject)=>{
             mysqlConnection.query('SELECT groupNumber FROM manegersproperties WHERE groupCode='+"'"+code+"'",(err,rows,fields)=>{
-                if(!err){
+                if(!err && rows[0] !== undefined){
                     resolve(rows[0].groupNumber);
                 }
                 else{
-                    console.log(err);
+                    reject("Group code is not correct");
                 }
             });
         });
         return ans; 
     },
 
+    getGroupParticipants: async (userName) => {
+        var ans = await new Promise((resolve,reject)=>{
+            mysqlConnection.query(`SELECT userName FROM users where groupNumber in ( select groupNumber from users where userName = '${userName}')`
+            ,(err,rows,fields)=>{
+                if(!err){
+                    resolve(rows);
+                }
+                else{
+                    reject(err);
+                }
+            });
+        });
+        return ans; 
+    }
     
 }

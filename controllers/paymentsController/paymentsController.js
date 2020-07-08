@@ -3,43 +3,43 @@ const Validator = require('../../mySql/Validator');
 
 module.exports = {
 
-    getUserPayments : () => {
+    getUserPayments : async(req,res,next)=>{
         try{
             username = req.userData.userName;
-            var payments = paymentDB.getUserPayments(username);
+            var payments = await paymentDB.getUserPayments(username);
             return res.status(200).json({
                 payments: payments
             });
         }catch(err){
-            return res.status(401).json({
+            return res.status(500).json({
                 message: 'Failed'
             });
         }
     },
 
-    getGroupPayments: () => {
+    getGroupPayments: async(req,res,next)=> {
         try{
             username = req.userData.userName;
-            var payments = paymentDB.getGroupPayments(username);
+            var payments = await paymentDB.getGroupPayments(username);
             return res.status(200).json({
                 payments: payments
             });
         }catch(err){
-            return res.status(401).json({
+            return res.status(500).json({
                 message: 'Failed'
             });
         }
     },
 
-    getGroupPaymentsInDetails: () => {
+    getGroupPaymentsInDetails: async(req,res,next)=> {
         try{
             username = req.userData.userName;
-            var payments = paymentDB.getGroupPaymentsInDetails(username);
+            var payments = await paymentDB.getGroupPaymentsInDetails(username);
             return res.status(200).json({
                 payments: payments
             });
         }catch(err){
-            return res.status(401).json({
+            return res.status(500).json({
                 message: 'Failed'
             });
         }
