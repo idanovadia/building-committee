@@ -8,12 +8,12 @@ module.exports = {
             username = req.userData.userName;
             var listOfCharges = await chargeDB.getUserCharges(username);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully worked",
                 listOfCharges: listOfCharges
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },
@@ -23,12 +23,12 @@ module.exports = {
             username = req.userData.userName;
             var listOfGroupCharges = await chargeDB.getGroupCharges(username);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully worked",
                 listOfGroupCharges: listOfGroupCharges
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },
@@ -38,12 +38,12 @@ module.exports = {
             username = req.userData.userName;
             var listOfGroupCharges = await chargeDB.getGroupChargesInDetails(username);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully worked",
                 listOfGroupCharges: listOfGroupCharges
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },
@@ -52,11 +52,11 @@ module.exports = {
         try{
             await chargeDB.setNewCharge(req.body.listOfCharges);
             return res.status(200).json({
-                massage: "Successfully inserted",
+                message: "Successfully inserted",
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },
@@ -65,11 +65,11 @@ module.exports = {
         try{
             await chargeDB.pay(req.body.chargeID);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully paid",
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },

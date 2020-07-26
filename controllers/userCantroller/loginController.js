@@ -9,13 +9,13 @@ JWT_KEY = "dkfmsdlmlsmflsmflmslmflsmflmslfmsdlmfldsmf"
 /**checked */
 
 exports.login = async(req,res,next)=>{
-    var user = await userDB.getUser(req.body.userName);
     try{
+        var user = await userDB.getUser(req.body.userName);
         Validator.loginValidator(user);
         bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
             if(err){
                 return res.status(401).json({
-                    message: 'Auth failed'
+                    error: 'Auth failed'
                 });
             }
             if(result){
@@ -23,20 +23,20 @@ exports.login = async(req,res,next)=>{
                     userName:user[0].userName,
                     role:user[0].role,
                 }, JWT_KEY,{
-                    expiresIn: "1h"
+                    expiresIn: "10h"
                 });
                 return res.status(200).json({
-                    message:'Auth successful',
+                    message:'Login successful',
                     token:token
                 });
             }
             return res.status(401).json({
-                message: 'Auth failed'
+                error: 'Auth failed'
             });
         });
     }catch(err){
         return res.status(401).json({
-            message: err.message
+            error: err
         });
     }
     

@@ -1,10 +1,10 @@
 const express = require("express");
 const Router = express.Router();
 const checkAuth = require("../../middleware/auth");
-const updateDetailsController = require('../../controllers/userCantroller/updateDetailsController')
+const userController = require('../../controllers/userCantroller/userController')
 
 
-Router.post("/updatePassword",checkAuth.authorization,updateDetailsController.updatePassword);
+Router.get("/getUserDetails",checkAuth.authorization,userController.getUser);
 
 // Router.post("/personal",checkAuth,(req,res,next)=>{
     

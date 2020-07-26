@@ -10,12 +10,12 @@ module.exports = {
         try{
             var users = await usersDB.getGroupParticipants(req.userData.userName);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully worked",
                 users: users
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },
@@ -26,12 +26,12 @@ module.exports = {
             // appointmentID = req.body.appointmentID;
             var appointments = await appointmentsDB.getAppointmentDetails(appointmentID);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully worked",
                 appointments: appointments
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },
@@ -42,12 +42,12 @@ module.exports = {
             var appointmentID = await appointmentsDB.insertMeeting(meetingObj);
             var appointments = await participantsDB.insertParticipants(appointmentID,req.body.participants,req.userData.userName);
             return res.status(200).json({
-                massage: "Successfully worked",
+                message: "Successfully worked",
                 appointments: appointments
             });
         }catch(err){
             return res.status(500).json({
-                massage: "Failed"
+                message: "Failed"
             });
         }
     },

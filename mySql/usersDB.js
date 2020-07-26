@@ -33,7 +33,7 @@ module.exports = {
     getUser: async (userName) =>{
         var ans = await new Promise((resolve,reject)=>{
             mysqlConnection.query('SELECT * FROM users WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
-                if(!err){
+                if(!err && rows.length !== 0){
                     resolve(rows);
                 }
                 else{

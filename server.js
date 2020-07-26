@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const mysqlConnection = require("./connection");
 // const PeopleRouter = require("./routes/people");
 const RegistrationRouter = require("./routes/userRoutes/registration");
+const userRouter = require("./routes/userRoutes/userDetails");
+const AuthenticationRouter = require("./routes/userRoutes/authentication");
 const LoginRouter = require("./routes/userRoutes/login");
 const UserDetailsRouter = require("./routes/userRoutes/updateDetails");
 const paymentsRouter = require("./routes/payments/payments");
@@ -30,12 +32,14 @@ app.use((req, res, next) => {
   });
 
 app.use("/registration", RegistrationRouter);
+app.use("/authentication", AuthenticationRouter);
 app.use("/login", LoginRouter);
 app.use("/myDetails", UserDetailsRouter);
 app.use("/payments", paymentsRouter);
 app.use("/charges", chargesRouter);
 app.use("/appointments", appointmentsRouter);
 app.use("/participants", participantsRouter);
+app.use("/user", userRouter);
 
 
 

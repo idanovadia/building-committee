@@ -40,7 +40,7 @@ module.exports = {
 
     getUserCharges: async(userName) => {
         var ans = await new Promise((resolve,reject)=>{
-            mysqlConnection.query('SELECT * FROM charges WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
+            mysqlConnection.query('SELECT amount, chargeDate, objective FROM charges WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
                 if(!err){
                     resolve(rows);
                 }
