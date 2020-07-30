@@ -18,10 +18,24 @@ module.exports = {
         return ans; 
     },
 
+    getAppointments: async(userName) => {
+        var ans = await new Promise((resolve,reject)=>{
+            mysqlConnection.query(`select * from appointments where appointmentsID in (SELECT appointmentID FROM meeting_participants WHERE userName='${userName}')`,(err,rows,fields)=>{
+                if(!err){
+                    resolve(rows);
+                }
+                else{
+                    reject("Failed");
+                }
+            });
+        });
+        return ans; 
+    },
+
     insertMeeting : async(meeting) => {
         return await new Promise((resolve,reject)=>{
-            var query = 'INSERT INTO appointments (userName, date, objective )'+
-            ' VALUES ('+"'"+meeting.userName+"'"+','+"'"+meeting.date+"'"+','+"'"+meeting.objective+"'"+')';
+            var query = 'INSERT INTO appointments (userName, start_date, end_date, objective )'+
+            ' VALUES ('+"'"+meeting.userName+"'"+','+"'"+meeting.start_date+"'"+','+"'"+meeting.end_date+"'"+','+"'"+meeting.objective+"'"+')';
             mysqlConnection.query(query,(err,rows,fields)=>{
                 if(!err){
                     resolve(rows.insertId);

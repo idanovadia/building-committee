@@ -20,6 +20,22 @@ module.exports = {
         }
     },
 
+    getMyAppointments: async(req,res,next)=>{
+        try{
+            userName = req.userData.userName;
+            // appointmentID = req.body.appointmentID;
+            var appointments = await appointmentsDB.getAppointments(userName);
+            return res.status(200).json({
+                message: "Successfully worked",
+                appointments: appointments
+            });
+        }catch(err){
+            return res.status(500).json({
+                message: "Failed"
+            });
+        }
+    },
+
     getAppointmentDetails: async(req,res,next)=>{
         try{
             appointmentID = req.query.appointmentID;
@@ -38,7 +54,8 @@ module.exports = {
 
     insertMeeting:  async(req,res,next)=>{
         try{
-            var meetingObj = new meeting.meeting(req.userData.userName,req.body.date,req.body.objective);
+            var meetingObj = new meeting.meeting(req.userData.userName,req.body.start_date,
+                req.body.end_date,req.body.objective);
             var appointmentID = await appointmentsDB.insertMeeting(meetingObj);
             var appointments = await participantsDB.insertParticipants(appointmentID,req.body.participants,req.userData.userName);
             return res.status(200).json({
@@ -51,5 +68,10 @@ module.exports = {
             });
         }
     },
+
+    // deleteMeeting: async(req,res,next)=>{
+    //     var meetingID = req.body.meetingID;
+
+    // }
 
 }

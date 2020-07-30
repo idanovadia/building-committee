@@ -5,10 +5,10 @@ module.exports = {
 
     insertParticipants : async(appointmentID,participants,managerUsername) => {
         var newQuery = 'INSERT INTO meeting_participants (userName, appointmentID) VALUES';
-        participants.forEach(participant => newQuery = newQuery + '('+"'"+participant.userName+"'"+','+"'"+appointmentID+"'"+'),');
-        newQuery = newQuery + '('+"'"+managerUsername+"'"+','+"'"+appointmentID+"'"+')';
+        participants.forEach(participant => newQuery = newQuery + '('+"'"+participant+"'"+','+"'"+appointmentID+"'"+'),');
+        // newQuery = newQuery + '('+"'"+managerUsername+"'"+','+"'"+appointmentID+"'"+')';
         // newQuery = newQuery.replaceAt(newQuery.length-1," ");
-
+        newQuery = newQuery.replaceAt(newQuery.length-1," ");
         var ans = await new Promise((resolve,reject)=>{
             mysqlConnection.query(newQuery,(err,rows,fields)=>{
                 if(!err){
