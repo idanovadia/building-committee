@@ -69,6 +69,19 @@ module.exports = {
         }
     },
 
+    updateMeeting:  async(req,res,next)=>{
+        try{
+            await appointmentsDB.updateMeeting(req.body.meeting)
+            return res.status(200).json({
+                message: "Successfully worked",
+                appointments: appointments
+            });
+        }catch(err){
+            return res.status(500).json({
+                message: "Failed"
+            });
+        }
+    }
     // deleteMeeting: async(req,res,next)=>{
     //     var meetingID = req.body.meetingID;
 

@@ -45,6 +45,20 @@ module.exports = {
                 }
             });
         });
+    },
+
+    updateMeeting : async(meeting) => {
+        return await new Promise((resolve,reject)=>{
+            var query = `Update appointments set start_date ='${meeting.start}', end_date ='${meeting.end}' where appointmentsID ='${meeting.id}'`;
+            mysqlConnection.query(query,(err,rows,fields)=>{
+                if(!err){
+                    resolve(rows.insertId);
+                }
+                else{
+                    reject(err);
+                }
+            });
+        });
     }
 
 
