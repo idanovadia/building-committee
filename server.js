@@ -11,6 +11,7 @@ const paymentsRouter = require("./routes/payments/payments");
 const chargesRouter = require("./routes/charges/charges");
 const appointmentsRouter = require("./routes/appointments/appointments");
 const participantsRouter = require("./routes/meeting_participants/meeting_participants");
+const testRouter = require("./routes/test_con/testCon");
 // var cors = require('cors')
 
 var app = express();
@@ -40,6 +41,7 @@ app.use("/charges", chargesRouter);
 app.use("/appointments", appointmentsRouter);
 app.use("/participants", participantsRouter);
 app.use("/user", userRouter);
+app.use("/test", testRouter);
 
 
 
