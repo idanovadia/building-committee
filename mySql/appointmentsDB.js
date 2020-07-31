@@ -59,6 +59,20 @@ module.exports = {
                 }
             });
         });
+    },
+
+    deleteMeeting : async(meetingID) => {
+        return await new Promise((resolve,reject)=>{
+            var query = `Delete From appointments where appointmentsID ='${meetingID}'`;
+            mysqlConnection.query(query,(err,rows,fields)=>{
+                if(!err){
+                    resolve(rows.insertId);
+                }
+                else{
+                    reject(err);
+                }
+            });
+        });
     }
 
 

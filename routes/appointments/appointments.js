@@ -10,6 +10,7 @@ Router.get('/getMyAppointments',checkAuth.authorization,appointmentsController.g
 Router.get('/GroupMembers',checkAuth.authorization,checkAuth.managerAuthorization,appointmentsController.getGroupMembers);
 Router.post('/insertMeeting',checkAuth.authorization,checkAuth.managerAuthorization,appointmentsController.insertMeeting);
 Router.post('/updateMeeting',checkAuth.authorization,checkAuth.managerAuthorization,appointmentsController.updateMeeting);
+Router.delete('/deleteMeeting',checkAuth.authorization,checkAuth.managerAuthorization,appointmentsController.deleteMeeting);
 
 
 module.exports = Router;

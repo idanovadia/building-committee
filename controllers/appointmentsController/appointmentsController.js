@@ -81,7 +81,23 @@ module.exports = {
                 message: "Failed"
             });
         }
+    },
+
+    deleteMeeting:  async(req,res,next)=>{
+        try{
+            var id = req.query.meetingID;
+            await appointmentsDB.deleteMeeting(id);
+            await participantsDB.deleteParticipants(id);
+            return res.status(200).json({
+                message: "Successfully worked"
+            });
+        }catch(err){
+            return res.status(500).json({
+                message: "Failed"
+            });
+        }
     }
+
     // deleteMeeting: async(req,res,next)=>{
     //     var meetingID = req.body.meetingID;
 

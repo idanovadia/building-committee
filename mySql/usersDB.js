@@ -35,6 +35,22 @@ module.exports = {
             mysqlConnection.query('SELECT * FROM users WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
                 if(!err && rows.length !== 0){
                     resolve(rows);
+                }else if(!err && rows.length === 0){
+                    resolve([]);
+                }
+                else{
+                    reject("Auth failed");
+                }
+            });
+        });
+        return ans; 
+    },
+
+    getCode: async (userName) =>{
+        var ans = await new Promise((resolve,reject)=>{
+            mysqlConnection.query('SELECT groupCode FROM manegersproperties WHERE userName='+"'"+userName+"'",(err,rows,fields)=>{
+                if(!err && rows.length !== 0){
+                    resolve(rows);
                 }
                 else{
                     reject("Auth failed");
