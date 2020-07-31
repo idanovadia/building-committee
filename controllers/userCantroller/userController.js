@@ -9,7 +9,9 @@ exports.getUser = async(req,res,next)=>{
     try{
         username = req.userData.userName;
         var myUser = (await userDB.getUser(username))[0];
-        myUser.code = (await usersDB.getCode(username))[0].groupCode;
+        if(myUser.role === 'manager'){
+            myUser.code = (await usersDB.getCode(username))[0].groupCode;
+        }
         delete myUser['password'];
         return res.status(200).json({
             message: "Successfully worked",
