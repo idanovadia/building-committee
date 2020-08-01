@@ -1,7 +1,7 @@
 
 const mysql = require("mysql");
 
-var mysqlConnection = mysql.createConnection({
+var mysqlConnection = mysql.createPool({
     host: 'idan.mysql.database.azure.com',
     port : '3306',
     user : 'idanov@idan',
@@ -20,12 +20,16 @@ var mysqlConnection = mysql.createConnection({
 //   multipleStatements : true
 // });
 
-mysqlConnection.connect((err)=> {
-    if (err) {
-      return console.error('error: ' + err.message);
-    }
-  
-    console.log('Connected to the MySQL server.');
-  });
+mysqlConnection.getConnection(
+	function (err) { 
+	if (err) { 
+		console.log("!!! Cannot connect !!! Error:");
+		throw err;
+	}
+	else
+	{
+	   console.log("Connection established.");
+	}	
+});
 
 module.exports = mysqlConnection;
